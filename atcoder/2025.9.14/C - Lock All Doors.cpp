@@ -11,55 +11,26 @@ int main()
         cin >> door[i];
     }
 
-    int left = R;
-    int leftnumber = 0;
-    for (int i = 0; i < R; i++)
+    int left = N + 1;
+    int right = 0;
+    int open = 0;
+    for (int i = 0; i < N; i++)
     {
-        leftnumber = i;
-        if (door[i] == 1)
+        if (door[i] == 0)
         {
-            left--;
-            leftnumber = i + 1;
-        }
-        else
-            break;
-    }
-    int leftops = 0;
-    for (int i = R - 1; i >= leftnumber; i--)
-    {
-        if (door[i] == 1)
-        {
-            leftops += 1;
-            door[i] = 0;
+            left = min(left, i + 1);
+            right = max(right, i + 1);
+            open++;
         }
     }
-    leftops = leftops + R - leftnumber;
-
-    int right = N - R;
-    int rightnumber = 0;
-    for (int i = N - 1; i >= R; i--)
+    if (open == 0)
     {
-        rightnumber = i;
-        if (door[i] == 1)
-        {
-            right--;
-            rightnumber = i;
-        }
-        else
-            break;
+        cout << 0;
+        return 0;
     }
-    int rightops = 0;
-    for (int i = R; i <= rightnumber; i++)
-    {
-        if (door[i] == 1)
-        {
-            rightops += 1;
-            door[i] = 0;
-        }
-    }
-    rightops = rightops - R + rightnumber + 1;
-    int ops = 0;
-    ops = leftops + rightops;
+    left = min(left, R + 1);
+    right = max(right, R);
+    int ops = 2 * (right - left + 1) - open;
     cout << ops;
     return 0;
 }
