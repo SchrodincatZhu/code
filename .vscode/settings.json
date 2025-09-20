@@ -1,4 +1,12 @@
 {
     "editor.formatOnSave": true,
     "editor.acceptSuggestionOnEnter": "off",
+    "files.associations": {
+        "xstring": "cpp",
+        "iostream": "cpp",
+        "algorithm": "cpp",
+        "vector": "cpp",
+        "cstdlib": "cpp",
+        "c - lock all doors": "cpp"
+    },
 }
