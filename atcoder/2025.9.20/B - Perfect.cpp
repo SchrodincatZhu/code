@@ -41,6 +41,9 @@ int main()
         }
         cout << c[i];
     }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 5fd9b49 (B - Perfect)
     return 0;
 }
