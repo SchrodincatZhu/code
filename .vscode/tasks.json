@@ -1,6 +1,7 @@
 {
     "version": "2.0.0",
     "tasks": [
+        // ── C++ 原有任务（保持不变）──────────────────────────────────
         {
             "type": "cppbuild",
             "label": "C/C++: g++ 生成活动文件",
@@ -93,6 +94,48 @@
                 "kind": "test",
                 "isDefault": true
             }
+        },
+        // ── Python 新增任务 ──────────────────────────────────────────
+        {
+            // 直接弹出新窗口运行 .py 文件（无输入/输出重定向）
+            "type": "shell",
+            "label": "Python: 运行程序",
+            "command": "cmd",
+            "args": [
+                "/c",
+                "start cmd /k \"python \\\"${fileDirname}\\${fileBasenameNoExtension}.py\\\"\""
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            }
+        },
+        {
+            // 将同目录下的 .in 文件复制进 bin，然后以文件重定向方式运行 Python
+            // stdout 写入 bin\xxx.out，方便后续用"返回输出文件"取回
+            "type": "shell",
+            "label": "Python: 输入文件启动",
+            "dependsOn": [
+                "生成测试文件"
+            ],
+            "dependsOrder": "sequence",
+            "command": "cmd",
+            "args": [
+                "/c",
+                "python \"${fileDirname}\\${fileBasenameNoExtension}.py\" < \"${workspaceFolder}\\bin\\${fileBasenameNoExtension}.in\" > \"${workspaceFolder}\\bin\\${fileBasenameNoExtension}.out\""
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            }
+        },
+        {
+            // 完整流程：运行→取回输出→清理 bin
+            "label": "Python: 完成带文件启动",
+            "dependsOn": [
+                "Python: 输入文件启动",
+                "返回输出文件",
+                "删除活动文件"
+            ],
+            "dependsOrder": "sequence"
         }
     ]
 }
