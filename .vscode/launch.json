@@ -1,18 +1,21 @@
 {
     "version": "0.2.0",
     "configurations": [
+        // ── C++ ──────────────────────────────────────────────────────
         {
             "type": "cppdbg",
             "request": "launch",
-            "name": "Debug",
-            "program": "${workspaceFolder}/bin/${fileBasenameNoExtension}",
+            "name": "C++: Debug",
+            "program": "${workspaceFolder}/bin/${fileBasenameNoExtension}.exe",
             "args": [],
             "cwd": "${workspaceFolder}",
-            "preLaunchTask": "C/C++: g++ 生成活动文件",
-            "postDebugTask": "删除活动文件",
+            "preLaunchTask": "C/C++: g++ Debug 构建",
+            "postDebugTask": "清理 bin",
+            "MiMode": "gdb",
+            "miDebuggerPath": "C:/msys64/ucrt64/bin/gdb.exe", // ← 按实际路径修改
             "setupCommands": [
                 {
-                    "description": "gdb vector显示",
+                    "description": "启用 GDB pretty-printing",
                     "text": "-enable-pretty-printing",
                     "ignoreFailures": true
                 }
@@ -21,14 +24,16 @@
         {
             "type": "cppdbg",
             "request": "launch",
-            "name": "Release",
-            "program": "${workspaceFolder}/bin/${fileBasenameNoExtension}",
+            "name": "C++: Release",
+            "program": "${workspaceFolder}/bin/${fileBasenameNoExtension}.exe",
             "args": [],
             "cwd": "${workspaceFolder}",
-            "preLaunchTask": "C/C++: g++ 生成活动文件",
+            "preLaunchTask": "C/C++: g++ Release 构建",
+            "MiMode": "gdb",
+            "miDebuggerPath": "C:/msys64/ucrt64/bin/gdb.exe", // ← 按实际路径修改
             "setupCommands": [
                 {
-                    "description": "gdb vector显示",
+                    "description": "启用 GDB pretty-printing",
                     "text": "-enable-pretty-printing",
                     "ignoreFailures": true
                 }
@@ -37,35 +42,31 @@
         {
             "type": "cppdbg",
             "request": "launch",
-            "name": "带输入文件启动",
-            "program": "${workspaceFolder}/bin/${fileBasenameNoExtension}",
+            "name": "C++: 带输入文件调试",
+            "program": "${workspaceFolder}/bin/${fileBasenameNoExtension}.exe",
             "args": [],
             "cwd": "${workspaceFolder}/bin",
-            "preLaunchTask": "输入文件启动",
+            "preLaunchTask": "C++: 输入文件启动",
             "postDebugTask": "完成带文件启动",
+            "MiMode": "gdb",
+            "miDebuggerPath": "C:/msys64/ucrt64/bin/gdb.exe", // ← 按实际路径修改
             "setupCommands": [
                 {
-                    "description": "gdb vector显示",
+                    "description": "启用 GDB pretty-printing",
                     "text": "-enable-pretty-printing",
                     "ignoreFailures": true
                 }
             ]
         },
+        // ── Python ───────────────────────────────────────────────────
         {
             "type": "debugpy",
             "request": "launch",
             "name": "Python: Debug",
             "program": "${file}",
             "console": "integratedTerminal"
-        },
-        {
-            "type": "debugpy",
-            "request": "launch",
-            "name": "Python: 带输入文件启动",
-            "program": "${file}",
-            "console": "integratedTerminal",
-            "preLaunchTask": "生成测试文件",
-            "args": []
         }
+        // 注：debugpy 不支持 stdin 文件重定向，Python 带输入文件运行
+        //     请改用任务 "Python: 输入文件启动"（Ctrl+Shift+B 选取）
     ]
 }

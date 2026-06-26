@@ -1,6 +1,114 @@
 {
+    // ── 编辑器通用 ────────────────────────────────────────────────
     "editor.formatOnSave": true,
     "editor.acceptSuggestionOnEnter": "off",
+    // 对 LaTeX 文件关闭保存时格式化（避免与 LaTeX Workshop 冲突）
+    "[latex]": {
+        "editor.formatOnSave": false
+    },
+    // ── Python ───────────────────────────────────────────────────
     "python-envs.defaultEnvManager": "ms-python.python:system",
     "python-envs.defaultPackageManager": "ms-python.python:pip",
+    // ── LaTeX Workshop ───────────────────────────────────────────
+    // 前提：已安装 LaTeX Workshop 扩展（作者 James Yu）
+    //       已安装 TeX Live（推荐）或 MiKTeX，且已加入系统 PATH
+    //
+    // 使用说明：
+    //   保存 .tex 文件 → 自动编译
+    //   Ctrl+Alt+V     → 打开 PDF 预览
+    //   Ctrl+Alt+J     → 从光标位置跳转到 PDF（SyncTeX 正向）
+    //   Ctrl+Alt+B     → 手动触发编译
+    //   编译方案可在左侧 LaTeX Workshop 图标面板中切换
+    //
+    "latex-workshop.view.pdf.viewer": "tab",
+    "latex-workshop.latex.autoBuild.run": "onSave",
+    "latex-workshop.latex.recipe.default": "lastUsed",
+    "latex-workshop.synctex.afterBuild.enabled": true,
+    "latex-workshop.latex.tools": [
+        {
+            // 单次 XeLaTeX 编译（适用于无目录、无参考文献的简单文档）
+            "name": "xelatex",
+            "command": "xelatex",
+            "args": [
+                "-synctex=1",
+                "-interaction=nonstopmode",
+                "-file-line-error",
+                "%DOC%"
+            ],
+            "env": {}
+        },
+        {
+            "name": "bibtex",
+            "command": "bibtex",
+            "args": [
+                "%DOCFILE%"
+            ],
+            "env": {}
+        },
+        {
+            // latexmk 自动处理多次编译，是最省心的选择
+            "name": "latexmk-xe",
+            "command": "latexmk",
+            "args": [
+                "-xelatex",
+                "-synctex=1",
+                "-interaction=nonstopmode",
+                "-file-line-error",
+                "%DOC%"
+            ],
+            "env": {}
+        }
+    ],
+    "latex-workshop.latex.recipes": [
+        {
+            // 快速预览（无目录/引用时使用）
+            "name": "XeLaTeX",
+            "tools": [
+                "xelatex"
+            ]
+        },
+        {
+            // 有目录、交叉引用时使用（两次才能解析所有引用）
+            "name": "XeLaTeX × 2",
+            "tools": [
+                "xelatex",
+                "xelatex"
+            ]
+        },
+        {
+            // 含参考文献（BibTeX）时使用
+            "name": "XeLaTeX → BibTeX → XeLaTeX × 2",
+            "tools": [
+                "xelatex",
+                "bibtex",
+                "xelatex",
+                "xelatex"
+            ]
+        },
+        {
+            // 推荐方案：latexmk 自动判断编译次数，适合所有文档
+            "name": "latexmk（XeLaTeX）",
+            "tools": [
+                "latexmk-xe"
+            ]
+        }
+    ],
+    // 编译失败时自动清理残留辅助文件
+    "latex-workshop.latex.autoClean.run": "onBuilt",
+    "latex-workshop.latex.clean.fileTypes": [
+        "*.aux",
+        "*.bbl",
+        "*.blg",
+        "*.idx",
+        "*.ind",
+        "*.lof",
+        "*.lot",
+        "*.out",
+        "*.toc",
+        "*.fls",
+        "*.log",
+        "*.fdb_latexmk",
+        "*.synctex.gz",
+        "*.xdv"
+    ]
 }

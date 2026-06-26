@@ -1,13 +1,16 @@
 {
     "version": "2.0.0",
     "tasks": [
-        // ── C++ 原有任务（保持不变）──────────────────────────────────
+        // ── C++ ──────────────────────────────────────────────────────
         {
+            // Debug 模式：含调试符号、警告输出、LOCAL 宏（可用 #ifdef LOCAL 包裹调试代码）
             "type": "cppbuild",
-            "label": "C/C++: g++ 生成活动文件",
+            "label": "C/C++: g++ Debug 构建",
             "command": "g++",
             "args": [
                 "-g",
+                "-Wall",
+                "-DLOCAL",
                 "${fileDirname}\\${fileBasenameNoExtension}.cpp",
                 "-o",
                 "${workspaceFolder}\\bin\\${fileBasenameNoExtension}.exe",
@@ -16,26 +19,44 @@
             "options": {
                 "cwd": "${workspaceFolder}"
             },
-            "problemMatcher": [
-                "$gcc"
-            ],
+            "problemMatcher": ["$gcc"],
             "group": {
                 "kind": "build",
                 "isDefault": true
             },
-            "detail": "调试器生成的任务。"
+            "detail": "Debug 模式：-g -Wall -DLOCAL --std=c++17"
         },
         {
-            "type": "shell",
-            "label": "删除活动文件",
-            "command": "cmd",
+            // Release 模式：-O2 优化，不含调试信息，与竞赛评测环境一致
+            "type": "cppbuild",
+            "label": "C/C++: g++ Release 构建",
+            "command": "g++",
             "args": [
-                "/c",
-                "del /Q \"${workspaceFolder}\\bin\\*\""
+                "-O2",
+                "${fileDirname}\\${fileBasenameNoExtension}.cpp",
+                "-o",
+                "${workspaceFolder}\\bin\\${fileBasenameNoExtension}.exe",
+                "--std=c++17"
             ],
             "options": {
                 "cwd": "${workspaceFolder}"
-            }
+            },
+            "problemMatcher": ["$gcc"],
+            "group": "build",
+            "detail": "Release 模式：-O2 --std=c++17"
+        },
+        {
+            "type": "shell",
+            "label": "清理 bin",
+            "command": "cmd",
+            "args": [
+                "/c",
+                "if exist \"${workspaceFolder}\\bin\\*\" del /Q \"${workspaceFolder}\\bin\\*\""
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": []
         },
         {
             "type": "shell",
@@ -47,14 +68,18 @@
             ],
             "options": {
                 "cwd": "${workspaceFolder}"
-            }
+            },
+            "problemMatcher": []
         },
         {
-            "label": "输入文件启动",
+            // 先编译，再复制 .in 文件到 bin/（顺序执行避免竞争）
+            "label": "C++: 输入文件启动",
             "dependsOn": [
-                "C/C++: g++ 生成活动文件",
+                "C/C++: g++ Debug 构建",
                 "生成测试文件"
-            ]
+            ],
+            "dependsOrder": "sequence",
+            "problemMatcher": []
         },
         {
             "type": "shell",
@@ -66,22 +91,23 @@
             ],
             "options": {
                 "cwd": "${workspaceFolder}"
-            }
+            },
+            "problemMatcher": []
         },
         {
             "label": "完成带文件启动",
             "dependsOn": [
                 "返回输出文件",
-                "删除活动文件"
+                "清理 bin"
             ],
-            "dependsOrder": "sequence"
+            "dependsOrder": "sequence",
+            "problemMatcher": []
         },
         {
             "type": "shell",
-            "label": "运行程序",
-            "dependsOn": [
-                "C/C++: g++ 生成活动文件"
-            ],
+            "label": "C++: 运行程序",
+            "dependsOn": ["C/C++: g++ Debug 构建"],
+            "dependsOrder": "sequence",
             "command": "cmd",
             "args": [
                 "/c",
@@ -93,11 +119,11 @@
             "group": {
                 "kind": "test",
                 "isDefault": true
-            }
+            },
+            "problemMatcher": []
         },
-        // ── Python 新增任务 ──────────────────────────────────────────
+        // ── Python ───────────────────────────────────────────────────
         {
-            // 直接弹出新窗口运行 .py 文件（无输入/输出重定向）
             "type": "shell",
             "label": "Python: 运行程序",
             "command": "cmd",
@@ -107,16 +133,14 @@
             ],
             "options": {
                 "cwd": "${workspaceFolder}"
-            }
+            },
+            "problemMatcher": []
         },
         {
-            // 将同目录下的 .in 文件复制进 bin，然后以文件重定向方式运行 Python
-            // stdout 写入 bin\xxx.out，方便后续用"返回输出文件"取回
+            // stdin 重定向自 .in 文件，stdout 写入 .out 文件（不可调试，但支持完整 I/O 重定向）
             "type": "shell",
             "label": "Python: 输入文件启动",
-            "dependsOn": [
-                "生成测试文件"
-            ],
+            "dependsOn": ["生成测试文件"],
             "dependsOrder": "sequence",
             "command": "cmd",
             "args": [
@@ -125,17 +149,48 @@
             ],
             "options": {
                 "cwd": "${workspaceFolder}"
-            }
+            },
+            "problemMatcher": []
         },
         {
-            // 完整流程：运行→取回输出→清理 bin
             "label": "Python: 完成带文件启动",
             "dependsOn": [
                 "Python: 输入文件启动",
                 "返回输出文件",
-                "删除活动文件"
+                "清理 bin"
             ],
-            "dependsOrder": "sequence"
+            "dependsOrder": "sequence",
+            "problemMatcher": []
+        },
+        // ── LaTeX ────────────────────────────────────────────────────
+        {
+            // latexmk 自动判断需要编译几次（含参考文献时无需手动 bibtex）
+            // 需要 TeX Live 或 MiKTeX 已安装并加入 PATH
+            "type": "shell",
+            "label": "LaTeX: 编译",
+            "command": "latexmk",
+            "args": [
+                "-xelatex",
+                "-synctex=1",
+                "-interaction=nonstopmode",
+                "-file-line-error",
+                "${fileBasenameNoExtension}"
+            ],
+            "options": {
+                "cwd": "${fileDirname}"
+            },
+            "problemMatcher": []
+        },
+        {
+            // 删除辅助文件，保留 .tex 和 .pdf
+            "type": "shell",
+            "label": "LaTeX: 清理辅助文件",
+            "command": "latexmk",
+            "args": ["-c", "${fileBasenameNoExtension}"],
+            "options": {
+                "cwd": "${fileDirname}"
+            },
+            "problemMatcher": []
         }
     ]
 }
