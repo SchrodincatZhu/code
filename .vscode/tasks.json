@@ -3,7 +3,6 @@
     "tasks": [
         // ── C++ ──────────────────────────────────────────────────────
         {
-            // Debug 模式：含调试符号、警告输出、LOCAL 宏（可用 #ifdef LOCAL 包裹调试代码）
             "type": "cppbuild",
             "label": "C/C++: g++ Debug 构建",
             "command": "g++",
@@ -24,10 +23,14 @@
                 "kind": "build",
                 "isDefault": true
             },
-            "detail": "Debug 模式：-g -Wall -DLOCAL --std=c++17"
+            "detail": "Debug 模式：-g -Wall -DLOCAL --std=c++17",
+            "presentation": {
+                "reveal": "silent",
+                "panel": "shared",
+                "showReuseMessage": false
+            }
         },
         {
-            // Release 模式：-O2 优化，不含调试信息，与竞赛评测环境一致
             "type": "cppbuild",
             "label": "C/C++: g++ Release 构建",
             "command": "g++",
@@ -43,7 +46,12 @@
             },
             "problemMatcher": ["$gcc"],
             "group": "build",
-            "detail": "Release 模式：-O2 --std=c++17"
+            "detail": "Release 模式：-O2 --std=c++17",
+            "presentation": {
+                "reveal": "silent",
+                "panel": "shared",
+                "showReuseMessage": false
+            }
         },
         {
             "type": "shell",
@@ -56,7 +64,12 @@
             "options": {
                 "cwd": "${workspaceFolder}"
             },
-            "problemMatcher": []
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "silent",
+                "close": true,
+                "panel": "shared"
+            }
         },
         {
             "type": "shell",
@@ -69,17 +82,26 @@
             "options": {
                 "cwd": "${workspaceFolder}"
             },
-            "problemMatcher": []
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "silent",
+                "close": true,
+                "panel": "shared"
+            }
         },
         {
-            // 先编译，再复制 .in 文件到 bin/（顺序执行避免竞争）
             "label": "C++: 输入文件启动",
             "dependsOn": [
                 "C/C++: g++ Debug 构建",
                 "生成测试文件"
             ],
             "dependsOrder": "sequence",
-            "problemMatcher": []
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "silent",
+                "close": true,
+                "panel": "shared"
+            }
         },
         {
             "type": "shell",
@@ -92,7 +114,12 @@
             "options": {
                 "cwd": "${workspaceFolder}"
             },
-            "problemMatcher": []
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "silent",
+                "close": true,
+                "panel": "shared"
+            }
         },
         {
             "label": "完成带文件启动",
@@ -101,7 +128,12 @@
                 "清理 bin"
             ],
             "dependsOrder": "sequence",
-            "problemMatcher": []
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "silent",
+                "close": true,
+                "panel": "shared"
+            }
         },
         {
             "type": "shell",
@@ -120,7 +152,12 @@
                 "kind": "test",
                 "isDefault": true
             },
-            "problemMatcher": []
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "silent",
+                "close": true,
+                "panel": "shared"
+            }
         },
         // ── Python ───────────────────────────────────────────────────
         {
@@ -134,10 +171,14 @@
             "options": {
                 "cwd": "${workspaceFolder}"
             },
-            "problemMatcher": []
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "silent",
+                "close": true,
+                "panel": "shared"
+            }
         },
         {
-            // stdin 重定向自 .in 文件，stdout 写入 .out 文件（不可调试，但支持完整 I/O 重定向）
             "type": "shell",
             "label": "Python: 输入文件启动",
             "dependsOn": ["生成测试文件"],
@@ -150,7 +191,12 @@
             "options": {
                 "cwd": "${workspaceFolder}"
             },
-            "problemMatcher": []
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "silent",
+                "close": true,
+                "panel": "shared"
+            }
         },
         {
             "label": "Python: 完成带文件启动",
@@ -160,12 +206,17 @@
                 "清理 bin"
             ],
             "dependsOrder": "sequence",
-            "problemMatcher": []
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "silent",
+                "close": true,
+                "panel": "shared"
+            }
         },
         // ── LaTeX ────────────────────────────────────────────────────
         {
-            // latexmk 自动判断需要编译几次（含参考文献时无需手动 bibtex）
-            // 需要 TeX Live 或 MiKTeX 已安装并加入 PATH
+            // 输出（含 PDF）直接放在 .tex 文件同目录，辅助文件由 settings.json 的
+            // files.exclude 在文件树中隐藏，不影响 SyncTeX 正常工作
             "type": "shell",
             "label": "LaTeX: 编译",
             "command": "latexmk",
@@ -179,10 +230,14 @@
             "options": {
                 "cwd": "${fileDirname}"
             },
-            "problemMatcher": []
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "silent",
+                "panel": "shared",
+                "showReuseMessage": false
+            }
         },
         {
-            // 删除辅助文件，保留 .tex 和 .pdf
             "type": "shell",
             "label": "LaTeX: 清理辅助文件",
             "command": "latexmk",
@@ -190,7 +245,12 @@
             "options": {
                 "cwd": "${fileDirname}"
             },
-            "problemMatcher": []
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "silent",
+                "close": true,
+                "panel": "shared"
+            }
         }
     ]
 }
