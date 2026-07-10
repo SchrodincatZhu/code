@@ -5,10 +5,12 @@ using namespace std;
 int main()
 {
 
-    const int PassengerNumber = 200;
-    const int simulations = 100000;
+    int tempPassenger = 0;
+    int tempSimulations = 0;
     int SuccessCount = 0;
-
+    cin >> tempPassenger >> tempSimulations;
+    const int PassengerNumber = tempPassenger;
+    const int simulations = tempSimulations;
     random_device seed;
     mt19937 gen(seed());
 
