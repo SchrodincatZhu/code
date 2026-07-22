@@ -22,6 +22,8 @@
         "**/*.lot": true,
         "**/*.xdv": true,
         "**/*.synctex.gz": true,
+        "**/*.hst": true, // ← 新增
+        "**/*.ver": true,
         "**/.latexbuild": true // 隐藏之前生成的旧文件夹
     },
     // ── LaTeX Workshop ───────────────────────────────────────────
@@ -117,6 +119,8 @@
         "*.log",
         "*.fdb_latexmk",
         "*.synctex.gz",
-        "*.xdv"
+        "*.xdv",
+        "*.hst",
+        "*.ver"
     ]
 }

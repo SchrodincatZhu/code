@@ -19,6 +19,8 @@ __pycache__/
 *.lof
 *.lot
 *.xdv
+*.hst
+*.ver
 *.synctex.gz
 .latexbuild/
 
