@@ -159,6 +159,90 @@
                 "panel": "shared"
             }
         },
+        // ── C ────────────────────────────────────────────────────────
+        {
+            "type": "cppbuild",
+            "label": "C: gcc Debug 构建",
+            "command": "gcc",
+            "args": [
+                "-g",
+                "-Wall",
+                "-DLOCAL",
+                "${fileDirname}\\${fileBasenameNoExtension}.c",
+                "-o",
+                "${workspaceFolder}\\bin\\${fileBasenameNoExtension}.exe",
+                "--std=c17"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": ["$gcc"],
+            "group": "build",
+            "detail": "Debug 模式：-g -Wall -DLOCAL --std=c17",
+            "presentation": {
+                "reveal": "silent",
+                "panel": "shared",
+                "showReuseMessage": false
+            }
+        },
+        {
+            "type": "cppbuild",
+            "label": "C: gcc Release 构建",
+            "command": "gcc",
+            "args": [
+                "-O2",
+                "${fileDirname}\\${fileBasenameNoExtension}.c",
+                "-o",
+                "${workspaceFolder}\\bin\\${fileBasenameNoExtension}.exe",
+                "--std=c17"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": ["$gcc"],
+            "group": "build",
+            "detail": "Release 模式：-O2 --std=c17",
+            "presentation": {
+                "reveal": "silent",
+                "panel": "shared",
+                "showReuseMessage": false
+            }
+        },
+        {
+            "label": "C: 输入文件启动",
+            "dependsOn": [
+                "C: gcc Debug 构建",
+                "生成测试文件"
+            ],
+            "dependsOrder": "sequence",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "silent",
+                "close": true,
+                "panel": "shared"
+            }
+        },
+        {
+            "type": "shell",
+            "label": "C: 运行程序",
+            "dependsOn": ["C: gcc Debug 构建"],
+            "dependsOrder": "sequence",
+            "command": "cmd",
+            "args": [
+                "/c",
+                "start cmd /k \"${workspaceFolder}\\bin\\${fileBasenameNoExtension}.exe\""
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": "test",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "silent",
+                "close": true,
+                "panel": "shared"
+            }
+        },
         // ── Python ───────────────────────────────────────────────────
         {
             "type": "shell",

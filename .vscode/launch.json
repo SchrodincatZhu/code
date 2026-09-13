@@ -58,6 +58,63 @@
                 }
             ]
         },
+        // ── C ────────────────────────────────────────────────────────
+        {
+            "type": "cppdbg",
+            "request": "launch",
+            "name": "C: Debug",
+            "program": "${workspaceFolder}/bin/${fileBasenameNoExtension}.exe",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "C: gcc Debug 构建",
+            "postDebugTask": "清理 bin",
+            "MiMode": "gdb",
+            "miDebuggerPath": "C:/msys64/ucrt64/bin/gdb.exe", // ← 按实际路径修改
+            "setupCommands": [
+                {
+                    "description": "启用 GDB pretty-printing",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+        {
+            "type": "cppdbg",
+            "request": "launch",
+            "name": "C: Release",
+            "program": "${workspaceFolder}/bin/${fileBasenameNoExtension}.exe",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "C: gcc Release 构建",
+            "MiMode": "gdb",
+            "miDebuggerPath": "C:/msys64/ucrt64/bin/gdb.exe", // ← 按实际路径修改
+            "setupCommands": [
+                {
+                    "description": "启用 GDB pretty-printing",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+        {
+            "type": "cppdbg",
+            "request": "launch",
+            "name": "C: 带输入文件调试",
+            "program": "${workspaceFolder}/bin/${fileBasenameNoExtension}.exe",
+            "args": [],
+            "cwd": "${workspaceFolder}/bin",
+            "preLaunchTask": "C: 输入文件启动",
+            "postDebugTask": "完成带文件启动",
+            "MiMode": "gdb",
+            "miDebuggerPath": "C:/msys64/ucrt64/bin/gdb.exe", // ← 按实际路径修改
+            "setupCommands": [
+                {
+                    "description": "启用 GDB pretty-printing",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        },
         // ── Python ───────────────────────────────────────────────────
         {
             "type": "debugpy",
